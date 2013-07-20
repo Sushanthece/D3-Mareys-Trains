@@ -13,14 +13,15 @@ var x = d3.time.scale()
 var y = d3.scale.linear()
     .range([0, height]);
 
+var z = d3.scale.linear()
+    .domain([.0001, .0003])
+    .range(["purple", "orange"])
+    .interpolate(d3.interpolateLab);
+
 var xAxis = d3.svg.axis()
     .scale(x)
     .ticks(8)
     .tickFormat(formatTime);
-
-var line = d3.svg.line()
-    .x(function(d) { return x(d.time); })
-    .y(function(d) { return y(d.station.distance); });
 
 var svg = d3.select("body").append("svg")
     .attr("width", width + margin.left + margin.right)
@@ -70,8 +71,14 @@ d3.tsv("schedule.tsv", type, function(error, trains) {
     .enter().append("g")
       .attr("class", function(d) { return d.type; });
 
-  train.append("path")
-      .attr("d", function(d) { return line(d.stops); });
+  train.selectAll("line")
+      .data(function(d) { return d.stops.slice(1).map(function(b, i) { return [d.stops[i], b]; }); })
+    .enter().append("line")
+      .attr("x1", function(d) { return x(d[0].time); })
+      .attr("x2", function(d) { return x(d[1].time); })
+      .attr("y1", function(d) { return y(d[0].station.distance); })
+      .attr("y2", function(d) { return y(d[1].station.distance); })
+      .style("stroke", function(d) { return z(Math.abs((d[1].station.distance - d[0].station.distance) / (d[1].time - d[0].time))); });
 
   train.selectAll("circle")
       .data(function(d) { return d.stops; })
