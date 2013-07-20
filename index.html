@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>  
+<head>
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheet.css">
+    <title>Marey's Train</title>
+</head>
+<style>
+
+svg {
+  font: 10px sans-serif;
+}
+
+.axis path {
+  display: none;
+}
+
+.axis line {
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.station line {
+  stroke: #ddd;
+  stroke-dasharray: 1,1;
+  shape-rendering: crispEdges;
+}
+
+.station text {
+  text-anchor: end;
+}
+
+.train path {
+  fill: none;
+  stroke-width: 1.5px;
+}
+
+.train circle {
+  stroke: #fff;
+}
+
+.train .N path { stroke: rgb(34,34,34); }
+.train .N circle { fill: rgb(34,34,34); }
+
+.train .L path { stroke: rgb(183,116,9); }
+.train .L circle { fill: rgb(183,116,9); }
+
+.train .B path { stroke: rgb(192,62,29); }
+.train .B circle { fill: rgb(192,62,29); }
+
+</style> 
+
+<body>
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/Sushanthece/D3-Mareys-Trains">View on GitHub</a>
+          <h1 id="project_title">Mareys-Trains</h1>
+          <a id="home" href="http://sushanthece.github.io/">Home</a>
+        </header>
+    </div>
+    
+    <!-- MAIN CONTENT -->
+    <div>
+      <section id="main_content" class="inner">
+        <script src="http://d3js.org/d3.v3.min.js"></script>
+        <script src="mareys_trains.js"></script>
+      </section>
+    </div>
+    
+</body>
+</html>
