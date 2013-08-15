@@ -4,10 +4,10 @@ var formatTime = d3.time.format("%I:%M%p");
 
 var margin = {top: 20, right: 30, bottom: 20, left: 200},
     width = 1200 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+    height = 550 - margin.top - margin.bottom;
 
 var x = d3.time.scale()
-    .domain([parseTime("5:30AM"), parseTime("11:30AM")])
+    .domain([parseTime("5:30AM"), parseTime("10:45PM")])
     .range([0, width]);
 
 var y = d3.scale.linear()
@@ -17,10 +17,10 @@ var z = d3.scale.linear()
     .domain([.0001, .0003])
     .range(["purple", "orange"])
     .interpolate(d3.interpolateLab);
-
+    
 var xAxis = d3.svg.axis()
     .scale(x)
-    .ticks(8)
+    .ticks(14)
     .tickFormat(formatTime);
 
 var svg = d3.select("body").append("svg")
@@ -36,7 +36,7 @@ svg.append("defs").append("clipPath")
     .attr("width", width)
     .attr("height", height + margin.top + margin.bottom);
 
-d3.tsv("schedule.tsv", type, function(error, trains) {
+d3.csv("data.csv", type, function(error, trains) {
   y.domain(d3.extent(stations, function(d) { return d.distance; }));
 
   var station = svg.append("g")
@@ -74,18 +74,21 @@ d3.tsv("schedule.tsv", type, function(error, trains) {
   train.selectAll("line")
       .data(function(d) { return d.stops.slice(1).map(function(b, i) { return [d.stops[i], b]; }); })
     .enter().append("line")
+
       .attr("x1", function(d) { return x(d[0].time); })
       .attr("x2", function(d) { return x(d[1].time); })
       .attr("y1", function(d) { return y(d[0].station.distance); })
       .attr("y2", function(d) { return y(d[1].station.distance); })
       .style("stroke", function(d) { return z(Math.abs((d[1].station.distance - d[0].station.distance) / (d[1].time - d[0].time))); });
 
-  train.selectAll("circle")
+  var circle = train.selectAll("circle")
       .data(function(d) { return d.stops; })
     .enter().append("circle")
       .attr("transform", function(d) { return "translate(" + x(d.time) + "," + y(d.station.distance) + ")"; })
-      .attr("r", 2);
-});
+      .attr("r", 3)
+  circle.append("title")
+        .text(function(d) { return  d.time.getHours()+' : '+d.time.getMinutes()+' .hrs' ; });
+      });
 
 function type(d, i) {
 
@@ -114,6 +117,6 @@ function type(d, i) {
 
 function parseTime(s) {
   var t = formatTime.parse(s);
-  if (t != null && t.getHours() < 3) t.setDate(t.getDate() + 1);
+  if (t != null && t.getHours() < 1) t.setDate(t.getDate() + 1);
   return t;
 }
