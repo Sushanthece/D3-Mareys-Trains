@@ -13,8 +13,11 @@ var x = d3.time.scale()
 var y = d3.scale.linear()
     .range([0, height]);
 
-var z = d3.scale.category20c();
-    
+var z = d3.scale.linear()
+    .domain([.0001, .0003])
+    .range(["purple", "orange"])
+    .interpolate(d3.interpolateLab);
+
 var xAxis = d3.svg.axis()
     .scale(x)
     .ticks(14)
